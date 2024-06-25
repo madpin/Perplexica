@@ -6,12 +6,12 @@ WORKDIR /home/perplexica
 
 COPY src /home/perplexica/src
 COPY tsconfig.json /home/perplexica/
-// COPY config.toml /home/perplexica/
-// Don't forget to mount the config.toml once you run this image
+# COPY config.toml /home/perplexica/
+# Don't forget to mount the config.toml once you run this image
 COPY package.json /home/perplexica/
 COPY yarn.lock /home/perplexica/
 
-// RUN sed -i "s|SEARXNG = \".*\"|SEARXNG = \"${SEARXNG_API_URL}\"|g" /home/perplexica/config.toml
+# RUN sed -i "s|SEARXNG = \".*\"|SEARXNG = \"${SEARXNG_API_URL}\"|g" /home/perplexica/config.toml
 
 RUN yarn install
 RUN yarn build
