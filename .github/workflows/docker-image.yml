@@ -7,12 +7,33 @@ on:
     branches: [ "master" ]
 
 jobs:
-
   build:
 
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: docker build . --file app.dockerfile --tag perplexica-app:$(date +%s)
+
+    - name: Build Docker image 1
+      run: |
+        docker build . --file app.dockerfile --tag perplexica-app:${{ github.sha }} --tag perplexica-app:latest
+
+    - name: Build Docker image 2
+      run: |
+        docker build . --file backend.dockerfile --tag perplexica-backend:${{ github.sha }} --tag perplexica-backend:latest
+
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Push Docker image 1
+      run: |
+        docker push perplexica-app:${{ github.sha }}
+        docker push perplexica-app:latest
+
+    - name: Push Docker image 2
+      run: |
+        docker push perplexica-backend:${{ github.sha }}
+        docker push perplexica-backend:latest
