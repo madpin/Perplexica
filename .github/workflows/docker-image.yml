@@ -16,11 +16,11 @@ jobs:
 
     - name: Build Docker image 1
       run: |
-        docker build . --file app.dockerfile --tag perplexica-app:${{ github.sha }} --tag perplexica-app:latest
+        docker build . --file app.dockerfile --tag ${{ secrets.DOCKER_USERNAME }}/perplexica-app:${{ github.sha }} --tag perplexica-app:latest
 
     - name: Build Docker image 2
       run: |
-        docker build . --file backend-madpin.dockerfile --tag perplexica-backend:${{ github.sha }} --tag perplexica-backend:latest
+        docker build . --file backend-madpin.dockerfile --tag ${{ secrets.DOCKER_USERNAME }}/perplexica-backend:${{ github.sha }} --tag perplexica-backend:latest
 
     - name: Log in to Docker Hub
       uses: docker/login-action@v2
