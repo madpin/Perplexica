@@ -30,10 +30,10 @@ jobs:
 
     - name: Push Docker image 1
       run: |
-        docker push perplexica-app:${{ github.sha }}
-        docker push perplexica-app:latest
+        docker push ${{ secrets.DOCKER_USERNAME }}/perplexica-app:${{ github.sha }}
+        docker push ${{ secrets.DOCKER_USERNAME }}/perplexica-app:latest
 
     - name: Push Docker image 2
       run: |
-        docker push perplexica-backend:${{ github.sha }}
-        docker push perplexica-backend:latest
+        docker push ${{ secrets.DOCKER_USERNAME }}/perplexica-backend:${{ github.sha }}
+        docker push ${{ secrets.DOCKER_USERNAME }}/perplexica-backend:latest
