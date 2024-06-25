@@ -1,0 +1,63 @@
+name: Sync with Original Repository
+
+on:
+  schedule:
+    - cron: '0 * * * *' # Runs every hour
+  workflow_dispatch: # Allows the workflow to be manually triggered
+  push:
+    branches:
+      - main # Change to your primary branch
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Target Repo
+        uses: actions/checkout@v4
+        with:
+          repository: your-username/your-repo
+          token: ${{ secrets.GH_TOKEN }}
+          ref: main
+
+      - name: Add Original Repo as Remote
+        run: git remote add upstream https://github.com/ItzCrazyKns/Perplexica.git
+
+      - name: Fetch Original Repo
+        run: git fetch upstream
+
+      - name: Merge Changes from Original Repo
+        run: |
+          git checkout -b sync-branch
+          git merge upstream/main --no-edit
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+
+      - name: Push Changes
+        run: git push origin sync-branch
+
+      - name: Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+          commit-message: 'Sync from original repository'
+          committer: 'GitHub <noreply@github.com>'
+          author: 'GitHub <noreply@github.com>'
+          title: 'Sync with original repository'
+          body: 'Automated sync from original repository'
+          base: main
+          head: sync-branch
+          branch: sync-branch
+          update-branch: true
+
+      - name: Check for Merge Conflicts
+        run: |
+          gh pr checks sync-branch
+          if [ "$(gh pr view sync-branch --json mergeable --jq .mergeable)" == "true" ]; then
+            gh pr merge sync-branch --merge --admin
+          else
+            echo "Merge conflicts detected, manual review required."
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
