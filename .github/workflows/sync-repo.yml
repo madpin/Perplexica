@@ -16,7 +16,7 @@ jobs:
       - name: Checkout Target Repo
         uses: actions/checkout@v4
         with:
-          repository: https://github.com/madpin/Perplexica.git
+          repository: madpin/Perplexica
           token: ${{ secrets.GH_TOKEN }}
           ref: main
 
