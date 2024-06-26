@@ -29,7 +29,7 @@ jobs:
       - name: Merge Changes from Original Repo
         run: |
           git checkout -b sync-branch
-          git merge upstream/master --no-edit
+          git merge upstream/master --no-edit --allow-unrelated-histories
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 
