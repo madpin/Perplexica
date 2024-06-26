@@ -53,13 +53,18 @@ jobs:
           branch: sync-branch
           update-branch: true
 
-      - name: Check for Merge Conflicts
+      - name: Check if Pull Request was created
         run: |
-          gh pr checks sync-branch
-          if [ "$(gh pr view sync-branch --json mergeable --jq .mergeable)" == "true" ]; then
-            gh pr merge sync-branch --merge --admin
+          if [ "${{ steps.cpr.outputs.pull_request_number }}" ]; then
+            echo "Pull request created, checking for merge conflicts..."
+            gh pr checks sync-branch
+            if [ "$(gh pr view sync-branch --json mergeable --jq .mergeable)" == "true" ]; then
+              gh pr merge sync-branch --merge --admin
+            else
+              echo "Merge conflicts detected, manual review required."
+            fi
           else
-            echo "Merge conflicts detected, manual review required."
+            echo "No pull request created, already in sync."
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
