@@ -6,7 +6,7 @@ on:
   workflow_dispatch: # Allows the workflow to be manually triggered
   push:
     branches:
-      - main # Change to your primary branch
+      - master # Change to your primary branch
 
 jobs:
   sync:
@@ -18,7 +18,7 @@ jobs:
         with:
           repository: madpin/Perplexica
           token: ${{ secrets.GH_TOKEN }}
-          ref: main
+          ref: master
 
       - name: Add Original Repo as Remote
         run: git remote add upstream https://github.com/ItzCrazyKns/Perplexica.git
@@ -29,7 +29,7 @@ jobs:
       - name: Merge Changes from Original Repo
         run: |
           git checkout -b sync-branch
-          git merge upstream/main --no-edit
+          git merge upstream/master --no-edit
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 
@@ -46,7 +46,7 @@ jobs:
           author: 'GitHub <noreply@github.com>'
           title: 'Sync with original repository'
           body: 'Automated sync from original repository'
-          base: main
+          base: master
           head: sync-branch
           branch: sync-branch
           update-branch: true
