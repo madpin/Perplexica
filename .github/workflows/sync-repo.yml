@@ -36,7 +36,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 
       - name: Push Changes
-        run: git push origin sync-branch
+        run: git push origin sync-branch --force
 
       - name: Create Pull Request
         id: cpr
